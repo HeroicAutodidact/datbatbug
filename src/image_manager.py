@@ -35,26 +35,41 @@ class ImageManager:
     def get_all_image_paths(self):
         return self.image_paths
 
-    def get_image(self, n):
+    def get_image_path(self, seedn=1):
+        """
+        Chooses a pseudo random image for a unit test.
+        Pseudorandom in order to select the same image every time.
+        :param seedn:
+        :return:
+        """
         lenImages = len(self.image_paths)
-        numpy.random.seed(n)
+        numpy.random.seed(seedn)
         i = numpy.ceil(lenImages * numpy.random.random())
         return self.image_paths[int(i)]
 
-    def get_images(self, n, seed):
+    def get_image_paths(self, n, seedn=1):
         """
+        Get a set of size n using seed seedn.
+        Designed for repeatable unit tests.
 
         :param n: number of images you need
         :param seed: Seed in order to make tests repeatable
         :return:
         """
         lenImages = len(self.image_paths)
-        numpy.random.seed(seed)
+        numpy.random.seed(seedn)
         indices = numpy.ceil(lenImages * numpy.random.random_sample((n,)))
         return [self.image_paths[int(i)] for i in indices]
 
-    def get_random_images(self, n):
+    def get_random_image_paths(self, n):
+        """
+        Truly random image section for integration tests, performance observation
+        :param n:
+        :return:
+        """
         lenImages = len(self.image_paths)
         indices = numpy.ceil(lenImages * numpy.random.random_sample((n,)))
         return [self.image_paths[int(i)] for i in indices]
 
+
+IM = ImageManager()
