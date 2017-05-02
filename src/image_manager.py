@@ -2,6 +2,8 @@ import os, inspect
 from os.path import join, abspath, pardir
 import re
 import numpy
+import pdb
+from cv2 import imread, imwrite
 
 class ImageManager:
 
@@ -35,6 +37,9 @@ class ImageManager:
     def get_all_image_paths(self):
         return self.image_paths
 
+    def get_all_images(self):
+        return [imread(image_path) for image_path in self.get_all_image_paths()]
+
     def get_image_path(self, seedn=1):
         """
         Chooses a pseudo random image for a unit test.
@@ -46,6 +51,9 @@ class ImageManager:
         numpy.random.seed(seedn)
         i = numpy.ceil(lenImages * numpy.random.random())
         return self.image_paths[int(i)]
+
+    def get_image(self, seedn=1):
+        return imread(self.get_image_path(seedn))
 
     def get_image_paths(self, n, seedn=1):
         """
@@ -61,6 +69,21 @@ class ImageManager:
         indices = numpy.ceil(lenImages * numpy.random.random_sample((n,)))
         return [self.image_paths[int(i)] for i in indices]
 
+    def get_images(self, n, seedn=1):
+        return [imread(image_path) for image_path in self.get_image_paths(n, seedn)]
+
+    def get_specific_image(self, name):
+        potential_matches = []
+        for path in self.get_all_image_paths():
+            print name
+            print path
+            if len(re.findall(name, path)) > 0:
+                potential_matches.append(path)
+        pdb.set_trace()
+        if len(potential_matches) != 1:
+            raise Exception("Must use a string which uniquely matches image")
+
+
     def get_random_image_paths(self, n):
         """
         Truly random image section for integration tests, performance observation
@@ -70,6 +93,15 @@ class ImageManager:
         lenImages = len(self.image_paths)
         indices = numpy.ceil(lenImages * numpy.random.random_sample((n,)))
         return [self.image_paths[int(i)] for i in indices]
+
+    def get_random_images(self, n):
+        return [imread(image_path) for image_path in self.get_random_image_paths(n)]
+
+    def writetmp(self, img):
+        imwrite(self._get_file_dir() + '/../out/tmp.jpg', img)
+
+    def write_n(self, n, img):
+        imwrite(self._get_file_dir() + '/../out/%d.jpg' % n, img)
 
 
 IM = ImageManager()
