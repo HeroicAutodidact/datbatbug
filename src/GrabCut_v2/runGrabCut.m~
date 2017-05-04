@@ -1,0 +1,21 @@
+indir = 'images';
+fnames = dir(sprintf('%s*JPG')indir'../../../repository/datbatbug/images/samples/*JPG');
+numfids = length(fnames);
+numfids = length(fnames);
+img_list = {};
+for K = 1:numfids
+  img_list{i} = imread(sprintf('images/%i.jpg', K));
+end
+
+
+img_list = {'flow1.png', 'flow2.png', 'flow3.png', 'flow4.png', 'flow5.png'};
+for i = 1:length(img_list)
+    img_stack{i} = imread(img_list{i});
+end
+outdir = 'output_masks';
+mkdir(outdir);
+
+fI = 'images';
+fO = 'outdir';
+args = struct(fI, img_stack, fO, outdir);
+GC_GUI(args)
